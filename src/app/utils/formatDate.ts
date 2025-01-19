@@ -1,10 +1,5 @@
-export function formatDate(date: string, includeRelative = false) {
+export function formatDate(date: number, includeRelative = false) {
     const currentDate = new Date();
-
-    if (!date.includes('T')) {
-        date = `${date}T00:00:00`;
-    }
-
     const targetDate = new Date(date);
     const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
     const monthsAgo = currentDate.getMonth() - targetDate.getMonth();

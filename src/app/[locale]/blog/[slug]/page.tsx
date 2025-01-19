@@ -136,7 +136,7 @@ export default function Blog({ params }: BlogParams) {
 				<Text
 					variant="body-default-s"
 					onBackground="neutral-weak">
-					{formatDate(post.metadata.publishedAt)}
+					{/* {formatDate(post.metadata.publishedAt)} */}
 				</Text>
 			</Flex>
 			<Flex
