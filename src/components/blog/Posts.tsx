@@ -1,6 +1,9 @@
-import { getPosts } from '@/app/utils/utils';
 import { Grid } from '@/once-ui/components';
 import Post from './Post';
+import getBlogIndex from '@/lib/notion/getBlogIndex';
+import { postIsPublished } from '@/lib/blog-helpers';
+import getNotionUsers from '@/lib/notion/getNotionUsers';
+import { getNotionImageUrl } from '@/lib/notion/utils';
 
 interface PostsProps {
     range?: [number] | [number, number];
@@ -9,16 +12,38 @@ interface PostsProps {
     thumbnail?: boolean;
 }
 
-export function Posts({
+export async function Posts({
     range,
     columns = '1',
     locale = 'en',
     thumbnail = false
 }: PostsProps) {
-    let allBlogs = getPosts(['src', 'app', '[locale]', 'blog', 'posts', locale]);
+    const postsTable = await getBlogIndex()
+    const authorsToGet: Set<string> = new Set()
+	const posts: any[] = Object.keys(postsTable)
+	  .map((slug) => {
+		const post = postsTable[slug]
+		// remove draft posts in production
+		if (!postIsPublished(post)) {
+		  return null
+		}
+		post.Authors = post.Authors || []
+		for (const author of post.Authors) {
+		  authorsToGet.add(author)
+		}
+		return post
+	  })
+	  .filter(Boolean)
+  
+	const { users } = await getNotionUsers(Array.from(authorsToGet))
 
-    const sortedBlogs = allBlogs.sort((a, b) => {
-        return new Date(b.metadata.publishedAt).getTime() - new Date(a.metadata.publishedAt).getTime();
+    posts.map((post) => {
+	  post.Authors = post.Authors.map((id) => users[id].name)
+      post.Image = getNotionImageUrl(post.Image, post.id)
+	})
+
+    const sortedBlogs = posts.sort((a, b) => {
+        return new Date(b.Date).getTime() - new Date(a.Date).getTime();
     });
 
     const displayedBlogs = range
@@ -36,7 +61,7 @@ export function Posts({
                     fillWidth marginBottom="40" gap="m">
                     {displayedBlogs.map((post) => (
                         <Post
-                            key={post.slug}
+                            key={post.Slug}
                             post={post}
                             thumbnail={thumbnail}
                         />

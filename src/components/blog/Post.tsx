@@ -18,13 +18,13 @@ export default function Post({ post, thumbnail }: PostProps) {
                 margin: '0',
                 height: 'fit-content',
             }}
-            key={post.slug}
-            href={`/blog/${post.slug}`}>
+            key={post.Slug}
+            href={`/blog/${post.Slug}`}>
             <Flex
                 position="relative"
                 mobileDirection="column"
                 fillWidth paddingY="12" paddingX="16" gap="32">
-                {post.metadata.image && thumbnail && (
+                {post.Image && thumbnail && (
                     <Flex
                         maxWidth={20} fillWidth
                         className={styles.image}>
@@ -36,8 +36,8 @@ export default function Post({ post, thumbnail }: PostProps) {
                                 border: '1px solid var(--neutral-alpha-weak)'
                             }}
                             radius="m"
-                            src={post.metadata.image}
-                            alt={'Thumbnail of ' + post.metadata.title}
+                            src={post.Image}
+                            alt={'Thumbnail of ' + post.Title}
                             aspectRatio="16 / 9"
                         />
                     </Flex>
@@ -50,17 +50,17 @@ export default function Post({ post, thumbnail }: PostProps) {
                         as="h2"
                         variant="heading-strong-l"
                         wrap="balance">
-                        {post.metadata.title}
+                        {post.Title}
                     </Heading>
                     <Text
                         variant="label-default-s"
                         onBackground="neutral-weak">
-                        {formatDate(post.metadata.publishedAt, false)}
+                        {formatDate(post.Date, false)}
                     </Text>
-                    { post.metadata.tag &&
+                    { post.Tag &&
                         <Tag
                             className="mt-8"
-                            label={post.metadata.tag}
+                            label={post.Tag}
                             variant="neutral" />
                     }
                 </Flex>

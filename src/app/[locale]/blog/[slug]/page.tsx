@@ -1,14 +1,14 @@
 import ScrollToHash from '@/components/ScrollToHash';
 import { notFound } from 'next/navigation'
 import { CustomMDX } from '@/components/mdx'
-import { getPosts } from '@/app/utils/utils'
-import { Avatar, Button, Flex, Heading, Text } from '@/once-ui/components'
+import { Avatar, Button, Flex, Heading, SmartImage, Text } from '@/once-ui/components'
 
-import { baseURL, renderContent } from '@/app/resources'
+import { baseURL } from '@/app/resources'
 import { unstable_setRequestLocale } from 'next-intl/server'
 import { routing } from '@/i18n/routing';
-import { useTranslations } from 'next-intl';
 import { formatDate } from '@/app/utils/formatDate'
+import getBlogIndex from '@/lib/notion/getBlogIndex';
+import { getPostList } from '@/lib/notion/utils';
 
 interface BlogParams {
     params: { 
@@ -24,9 +24,10 @@ export async function generateStaticParams() {
     const allPosts: { slug: string; locale: string }[] = [];
 
     // Fetch posts for each locale
+	const postsTable = await getBlogIndex()
+	const posts = getPostList(postsTable)
     for (const locale of locales) {
-        const posts = getPosts(['src', 'app', '[locale]', 'blog', 'posts', locale]);
-        allPosts.push(...posts.map(post => ({
+        allPosts.push(...(await posts).map(post => ({
             slug: post.slug,
             locale: locale,
         })));
@@ -35,19 +36,21 @@ export async function generateStaticParams() {
     return allPosts;
 }
 
-export function generateMetadata({ params: { slug, locale } }: BlogParams) {
-	let post = getPosts(['src', 'app', '[locale]', 'blog', 'posts', locale]).find((post) => post.slug === slug)
+export async function generateMetadata({ params: { slug, locale } }: BlogParams) {
+	const postsTable = await getBlogIndex()
+	const posts = await getPostList(postsTable)
+	let post = posts.find((post) => post.Slug === slug)
 
 	if (!post) {
 		return
 	}
 
 	let {
-		title,
-		publishedAt: publishedTime,
+		Title: title,
+		Date: publishedTime,
 		summary: description,
-		image,
-	} = post.metadata;
+		Image: image,
+	} = post
 	let ogImage = image
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
@@ -76,16 +79,16 @@ export function generateMetadata({ params: { slug, locale } }: BlogParams) {
 	}
 }
 
-export default function Blog({ params }: BlogParams) {
+export default async function Blog({ params }: BlogParams) {
 	unstable_setRequestLocale(params.locale);
-	let post = getPosts(['src', 'app', '[locale]', 'blog', 'posts', params.locale]).find((post) => post.slug === params.slug)
+	const postsTable = await getBlogIndex()
+	const posts = await getPostList(postsTable)
+	let post = posts.find((post) => post.Slug === params.slug)
 
 	if (!post) {
 		notFound()
 	}
 
-	const t = useTranslations();
-	const { person } = renderContent(t);
 
 	return (
 		<Flex as="section"
@@ -99,17 +102,17 @@ export default function Blog({ params }: BlogParams) {
 					__html: JSON.stringify({
 						'@context': 'https://schema.org',
 						'@type': 'BlogPosting',
-						headline: post.metadata.title,
-						datePublished: post.metadata.publishedAt,
-						dateModified: post.metadata.publishedAt,
-						description: post.metadata.summary,
-						image: post.metadata.image
-							? `https://${baseURL}${post.metadata.image}`
-							: `https://${baseURL}/og?title=${post.metadata.title}`,
-							url: `https://${baseURL}/${params.locale}/blog/${post.slug}`,
+						headline: post.Title,
+						datePublished: post.Date,
+						dateModified: post.Date,
+						description: post.summary,
+						image: post.Image
+							? post.Image
+							: `https://${baseURL}/og?title=${post.Title}`,
+							url: post.Image,
 						author: {
 							'@type': 'Person',
-							name: person.name,
+							// name: person.name,
 						},
 					}),
 				}}
@@ -123,27 +126,40 @@ export default function Blog({ params }: BlogParams) {
 			</Button>
 			<Heading
 				variant="display-strong-s">
-				{post.metadata.title}
+				{post.Title}
 			</Heading>
 			<Flex
 				gap="12"
 				alignItems="center">
-				{ person.avatar && (
+				{ post.Authors.length > 0 &&
+					post.Authors.map((author, index) => (
 					<Avatar
+						key={index}
 						size="s"
-						src={person.avatar}/>
+						src={author.profile_photo}/>
+					)
 				)}
 				<Text
 					variant="body-default-s"
 					onBackground="neutral-weak">
-					{formatDate(post.metadata.publishedAt)}
+					{formatDate(post.Date)}
 				</Text>
 			</Flex>
+			{post.Image && (
+				<SmartImage
+					aspectRatio="16 / 9"
+					radius="m"
+					alt="image"
+					src={post.Image}
+					unoptimized
+				/>
+			)}
+			{/* <Text variant="label-default-s">{post.Tag}</Text> */}
 			<Flex
 				as="article"
 				direction="column"
 				fillWidth>
-				<CustomMDX source={post.content} />
+				<CustomMDX source={post.preview} />
 			</Flex>
 			<ScrollToHash />
 		</Flex>
