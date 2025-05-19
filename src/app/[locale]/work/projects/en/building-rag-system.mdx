@@ -1,0 +1,43 @@
+---
+title: "Building a RAG-based AI System using LangChain and Ollama"
+publishedAt: "2025-05-01"
+summary: "Development of a Retrieval-Augmented Generation (RAG) system leveraging LangChain for orchestration, Ollama for running local LLMs, and Qdrant database for vector storage and retrieval."
+images:
+  - "/images/projects/rag-system/qdrant_ollama.png"
+  - "/images/projects/rag-system/ollama.png"
+  - "/images/projects/rag-system/langchain.jpg"
+  - "/images/projects/rag-system/qdrant.jpg"
+team:
+  - name: "Phu Bui"
+    role: "Software Engineer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://www.linkedin.com/in/phu-bui-40a973232/"
+---
+
+## Overview
+
+Development of an AI-powered Retrieval-Augmented Generation (RAG) system using LangChain for orchestration, Ollama for running lightweight local language models, and Qdrant for vector storage and semantic search.
+
+## Key Features
+
+- **LangChain Workflow Orchestration**: Designed modular chains using LangChain to handle document loading, embedding, vector search, and prompt generation, ensuring a flexible and scalable architecture.
+- **Local LLM with Ollama**: Integrated Ollama to run LLMs (such as LLaMA or Mistral) locally, reducing latency and enhancing data privacy.
+- **Qdrant Vector Database**: Utilized Qdrant to store and retrieve document embeddings, enabling efficient and accurate semantic search for relevant context.
+- **Custom Embedding and Ingestion Pipeline**: Built a pipeline for ingesting PDFs, websites, and plain text into the vector store with automatic chunking and metadata tagging for effective context retrieval.
+- **Prompt Engineering and Templating**: Developed reusable prompt templates tailored to the domain and task to optimize the performance of the language models.
+- **Evaluation and Logging**: Implemented structured logging and basic evaluation tools to analyze RAG performance across different input queries.
+
+## Technologies Used
+
+- **LangChain**: For building composable chains for RAG workflows.
+- **Ollama**: For running fast, local LLMs efficiently on developer machines or edge devices.
+- **Qdrant**: As a high-performance vector database supporting filtering and metadata indexing.
+- **Python**: Main programming language used for backend and orchestration logic.
+
+## Challenges and Learnings
+
+One major challenge was managing the trade-off between chunk size and retrieval relevance. Fine-tuning chunking strategies and embedding techniques significantly improved the context accuracy. Additionally, optimizing prompts for different model behaviors in local environments required extensive testing and iteration. The project also deepened understanding of semantic search mechanics and latency reduction techniques.
+
+## Outcome
+
+The system is capable of answering complex user queries based on proprietary document collections with high accuracy. It is now being used internally as a knowledge assistant and provides a scalable foundation for further GenAI applications in customer support, knowledge base automation, and internal tools.

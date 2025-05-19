@@ -10,7 +10,8 @@ const createI18nContent = (t) => {
         role: t("person.role"),
         avatar: '/images/avatar.jpg',
         location: 'Asia/Tokyo',        // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-        languages: ['English', 'Japanese', 'Vietnamese']  // optional: Leave the array empty if you don't want to display languages
+        languages: ['English', 'Japanese', 'Vietnamese'],  // optional: Leave the array empty if you don't want to display languages
+        mail: 'hunter17599@gmail.com',
     }
 
     const newsletter = {
@@ -40,7 +41,7 @@ const createI18nContent = (t) => {
         {
             name: 'Email',
             icon: 'email',
-            link: 'mailto:hunter17599@gmail.com',
+            link: `mailto:${person.mail}`,
         },
     ]
 
@@ -65,7 +66,7 @@ const createI18nContent = (t) => {
         },
         calendar: {
             display: true,
-            link: 'https://cal.com'
+            link: `https://calendar.google.com/calendar/u/0/r/eventedit?text=Meet+with+Me&details=Let%27s+have+a+video+call.&add=${person.mail}`
         },
         intro: {
             display: true,

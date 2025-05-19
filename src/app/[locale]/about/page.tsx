@@ -4,6 +4,7 @@ import TableOfContents from '@/components/about/TableOfContents';
 import styles from '@/components/about/about.module.scss'
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 export async function generateMetadata(
     {params: {locale}}: { params: { locale: string }}
@@ -54,6 +55,11 @@ export default function About(
             title: about.work.title,
             display: about.work.display,
             items: about.work.experiences.map(experience => experience.company)
+        },
+        { 
+            title: about.credentials.title,
+            display: about.credentials.display,
+            items: about.credentials.items.map(item => item.title)
         },
         { 
             title: about.studies.title,
@@ -163,7 +169,7 @@ export default function About(
                                 </Flex>
                                 <Flex
                                     paddingX="8">
-                                    Schedule a call
+                                    Schedule a meet
                                 </Flex>
                                 <IconButton
                                     href={about.calendar.link}
@@ -316,6 +322,57 @@ export default function About(
                                             onBackground="neutral-weak">
                                             {institution.description}
                                         </Text>
+                                    </Flex>
+                                ))}
+                            </Flex>
+                        </>
+                    )}
+
+                    { about.credentials.display && (
+                        <>
+                            <Heading
+                                as="h2"
+                                id={about.credentials.title}
+                                variant="display-strong-s"
+                                marginBottom="m">
+                                {about.credentials.title}
+                            </Heading>
+                            <Flex
+                                direction="column"
+                                fillWidth gap="l" marginBottom="40">
+                                {about.credentials.items.map((item, index) => (
+                                    <Flex
+                                        key={`${item.title}-${index}`}
+                                        fillWidth gap="4"
+                                        direction="column">
+                                        <Text
+                                            id={item.title}
+                                            variant="heading-strong-l">
+                                            {item.title}
+                                        </Text>
+                                        <Text
+                                            variant="body-default-s"
+                                            onBackground="neutral-weak">
+                                            {item.date}
+                                        </Text>
+                                        <Link href={item.description} style={{ fontSize: '14px' }}>{item.description}</Link>
+                                        {item.images.map((image, _) => (
+                                            <Flex
+                                            key={index}
+                                            border="neutral-medium"
+                                            borderStyle="solid-1"
+                                            radius="m"
+                                            width={image.width} height={image.height}
+                                        >
+                                            <SmartImage
+                                                enlarge
+                                                radius="m"
+                                                sizes={image.width.toString()}
+                                                alt={image.alt}
+                                                src={image.src}/>
+                                        </Flex>
+                                        ))
+                                        }
                                     </Flex>
                                 ))}
                             </Flex>
