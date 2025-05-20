@@ -1,7 +1,6 @@
 import ScrollToHash from '@/components/ScrollToHash';
 import { notFound } from 'next/navigation'
-import { CustomMDX } from '@/components/mdx'
-import { Avatar, Button, Flex, Heading, SmartImage, Text } from '@/once-ui/components'
+import { Avatar, Button, Flex, Heading, SmartImage, Tag, Text } from '@/once-ui/components'
 
 import { baseURL } from '@/app/resources'
 import { unstable_setRequestLocale } from 'next-intl/server'
@@ -9,6 +8,7 @@ import { routing } from '@/i18n/routing';
 import { formatDate } from '@/app/utils/formatDate'
 import getBlogIndex from '@/lib/notion/getBlogIndex';
 import { getPostList } from '@/lib/notion/utils';
+import NotionClientRenderer from '@/components/NotionClientRenderer';
 
 interface BlogParams {
     params: { 
@@ -89,7 +89,7 @@ export default async function Blog({ params }: BlogParams) {
 		notFound()
 	}
 
-
+	console.log(post.preview);
 	return (
 		<Flex as="section"
 			fillWidth maxWidth="xs"
@@ -154,13 +154,18 @@ export default async function Blog({ params }: BlogParams) {
 					unoptimized
 				/>
 			)}
-			{/* <Text variant="label-default-s">{post.Tag}</Text> */}
 			<Flex
 				as="article"
 				direction="column"
 				fillWidth>
-				<CustomMDX source={post.preview} />
+				<NotionClientRenderer recordMap={post.preview} />
 			</Flex>
+			{ post.Tag &&
+				<Tag
+					className="mt-8"
+					label={post.Tag}
+					variant="neutral" />
+				}
 			<ScrollToHash />
 		</Flex>
 	)
