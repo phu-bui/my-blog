@@ -10,6 +10,13 @@ jobs:
           name: Install dependencies (no frozen lockfile)
           command: yarn install --no-frozen-lockfile
       - run:
+          name: Set NOTION_TOKEN for build
+          command: |
+            if [ -z "$NOTION_TOKEN" ]; then
+              echo "ERROR: NOTION_TOKEN environment variable is not set. Please add it to your CircleCI project or context."
+              exit 1
+            fi
+      - run:
           command: yarn run build
       - run:
           name: Create the ~/artifacts directory if it doesn't exist
