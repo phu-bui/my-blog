@@ -6,8 +6,9 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - run:
+          name: Install dependencies (no frozen lockfile)
+          command: yarn install --no-frozen-lockfile
       - run:
           command: yarn run build
       - run:
