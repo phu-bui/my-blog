@@ -17,7 +17,10 @@ jobs:
               exit 1
             fi
       - run:
-          command: yarn run build
+          name: Set NOTION_TOKEN in environment for build
+          command: |
+            export NOTION_TOKEN="$NOTION_TOKEN"
+            yarn run build
       - run:
           name: Create the ~/artifacts directory if it doesn't exist
           command: mkdir -p ~/artifacts
