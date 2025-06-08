@@ -89,7 +89,6 @@ export default async function Blog({ params }: BlogParams) {
 		notFound()
 	}
 
-	console.log(post.preview);
 	return (
 		<Flex as="section"
 			fillWidth maxWidth="xs"

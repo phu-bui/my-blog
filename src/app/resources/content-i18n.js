@@ -246,6 +246,12 @@ const createI18nContent = (t) => {
             },
         ]
     }
+
+    const chat = {
+        label: t("chat.label"),
+        title: t("chat.title"),
+    }
+
     return {
         person,
         social,
@@ -254,7 +260,8 @@ const createI18nContent = (t) => {
         about,
         blog,
         work,
-        gallery
+        gallery,
+        chat,
     }
 };
 

@@ -346,4 +346,10 @@ const gallery = {
     ]
 }
 
-export { person, social, newsletter, home, about, blog, work, gallery };
+const chat = {
+    label: 'Chat',
+    title: 'My chatbot',
+    description: `Chat with bot of ${person.name} about anything you want`
+}
+
+export { person, social, newsletter, home, about, blog, work, gallery, chat };
