@@ -10,6 +10,9 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    compress: true,
+    poweredByHeader: false,
+    generateEtags: false,
     pageExtensions: ['ts', 'tsx', 'md', 'mdx'],
     images: {
         remotePatterns: [

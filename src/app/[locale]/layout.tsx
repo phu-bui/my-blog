@@ -24,6 +24,15 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     metadataBase: new URL(`https://${baseURL}/${locale}`),
     title: home.title,
     description: home.description,
+    keywords: ['portfolio', 'design engineer', 'web development', 'UI/UX', 'Next.js', 'React'],
+    authors: [{ name: person.name }],
+    creator: person.name,
+    publisher: person.name,
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
     openGraph: {
       title: `${person.firstName}'s Portfolio`,
       description: 'Portfolio website showcasing my work.',
@@ -31,6 +40,21 @@ export async function generateMetadata({ params: { locale } }: { params: { local
       siteName: `${person.firstName}'s Portfolio`,
       locale: 'en_US',
       type: 'website',
+      images: [
+        {
+          url: `https://${baseURL}/og?title=${encodeURIComponent(home.title)}`,
+          width: 1200,
+          height: 630,
+          alt: home.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${person.firstName}'s Portfolio`,
+      description: 'Portfolio website showcasing my work.',
+      images: [`https://${baseURL}/og?title=${encodeURIComponent(home.title)}`],
+      creator: '@yourtwitterhandle', // Add your Twitter handle
     },
     robots: {
       index: true,
@@ -41,6 +65,13 @@ export async function generateMetadata({ params: { locale } }: { params: { local
         'max-video-preview': -1,
         'max-image-preview': 'large',
         'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: `https://${baseURL}/${locale}`,
+      languages: {
+        en: `https://${baseURL}/en`,
+        id: `https://${baseURL}/id`,
       },
     },
   }
